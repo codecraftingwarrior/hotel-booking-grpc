@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.hotel.grpc";
+
+
+service HotelService {
+  rpc findAvailableOffers(OfferRequest) returns (OfferResponse);
+  rpc createBooking(BookingRequest) returns (BookingResponse);
+}
+
+message BookingRequest {
+  int64 agencyId = 1;
+  string login = 2;
+  string password = 3;
+  Client client = 4;
+  int64 offerId = 5;
+  message Client {
+    string firstName = 1;
+    string lastName = 2;
+    PaymentInformation paymentInformation = 3;
+    message PaymentInformation {
+      string cardNumber = 1;
+      int32 cvv = 2;
+    }
+  }
+}
+
+message BookingResponse {
+  string reference = 1;
+  string fromDate = 2;
+  string toDate = 3;
+  string clientFullName = 4;
+}
+
+message OfferRequest {
+  int64 agencyId = 1;
+  string agencyPassword = 2;
+  string fromDate = 3;
+  string toDate = 4;
+  int32 lodgedPeopleCount = 5;
+}
+
+
+message OfferResponse {
+  repeated OfferItem offers = 1;
+}
+
+message RoomItem {
+  string image = 2;
+  double price = 3;
+  double superficie = 4;
+  int32 bedCount = 5;
+}
+
+message OfferItem {
+  int64 offerId = 1;
+  int32 bedCount = 2;
+  string fromDate = 3;
+  string toDate = 4;
+  double price = 5;
+  repeated RoomItem rooms = 6;
+}
+
+message ErrorResponse {
+  string message = 1;
+}
